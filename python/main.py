@@ -22,24 +22,40 @@ class Environment:
                     stdscr.addstr(i, 2 * j, str(cell), curses.color_pair(self.map_color(cell)))
                     stdscr.refresh()
 
+class Agent:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.memory = [0 for i in range(10)]
+
+    def act(self):
+        pass
+
 
 if __name__ == '__main__':
     stdscr = curses.initscr()
-    curses.start_color()
-    curses.use_default_colors()
-    curses.init_pair(0, 0, -1)
-    curses.init_pair(1, 1, -1)
-    curses.init_pair(1, 2, -1)
-    curses.init_pair(1, 3, -1)
     curses.noecho()
     curses.cbreak()
 
-    env = Environment(5, 5)
-    for i in range(5):
-        env.grid[i][i] = 'A'
-        env.display()
-        time.sleep(0.5)
+    curses.start_color()
+    curses.use_default_colors()
+    # Define Colors
+    curses.init_pair(0, 0, -1) # Base
+    curses.init_pair(1, 1, -1) # A
+    curses.init_pair(1, 2, -1) # B
+    curses.init_pair(1, 3, -1) # Agent
 
+    env = Environment(5, 5)
+    agents = list()
+
+    grid.display()
+    time.sleep(1)
+    for i in range(100):
+        agents.shuffle()
+        for agent in agents:
+            agent.act()
+        grid.display()
+        time.sleep(0.5)
 
     curses.echo()
     curses.nocbreak()
