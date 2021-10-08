@@ -43,11 +43,17 @@ class Environment:
                 else:
                     stdscr.addstr(i + 1, 2 * j, ' ')
                 stdscr.refresh()
+
     def get_neighbors(self, x, y):
         for dx in range(-1, 2):
             for dy in range(-1, 2):
-                if (dx or dy) and (0 <= x + dx < self.n and 0 <= y + dy < self.m) and not self.grid[y + dy][x + dx]:
+                if (dx or dy) and (0 <= x + dx < self.n and 0 <= y + dy < self.m):
                     yield x + dx, y + dy
+
+    def get_empty_neighbors(self, x, y):
+        for new_x, new_y in self.get_neighbors(x, y):
+            if not self.grid[new_y][new_x]:
+                    yield new_x, new_y
 
 class Agent:
     def __init__(self, x, y, parent):
@@ -57,12 +63,14 @@ class Agent:
         self.parent = parent
 
     def act(self):
-        neighbors = list(self.parent.get_neighbors(self.x, self.y))
+        neighbors = list(self.parent.get_empty_neighbors(self.x, self.y))
         if len(neighbors) == 0:
             return
+
+        for x, y, neighbor in map(lambda cell: (cell[0], cell[1], self.parent.grid[cell[1]][cell[0]]), self.parent.get_neighbors(self.x, self.y)):
+            print(x, y, neighbor)
+
         self.x, self.y = random.choice(neighbors)
-
-
 
 if __name__ == '__main__':
     stdscr = curses.initscr()
@@ -91,6 +99,7 @@ if __name__ == '__main__':
     (3, 2, 'B'),
     (8, 1, 'B'),
     ]
+
     env.update()
 
     stdscr.addstr(0, 0, f'Initial State')
