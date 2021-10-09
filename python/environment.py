@@ -1,6 +1,6 @@
 import random
 
-import curses
+from curses import color_pair
 
 from fruit import Fruit
 from agent import Agent
@@ -63,11 +63,11 @@ class Environment:
                 stdscr.addstr(i + 1, 2 * j + x_shift, ' ')
 
         for agent in self.agents:
-            stdscr.addstr(agent.y + 1, 2 * agent.x + x_shift, 'X', curses.color_pair(agent.color))
+            stdscr.addstr(agent.y + 1, 2 * agent.x + x_shift, 'X', color_pair(agent.color))
 
         for fruit in self.fruits:
             if not fruit.is_carried:
-                stdscr.addstr(fruit.y + 1, 2 * fruit.x + x_shift, fruit.key, curses.color_pair(fruit.color))
+                stdscr.addstr(fruit.y + 1, 2 * fruit.x + x_shift, fruit.key, color_pair(fruit.color))
 
         stdscr.refresh()
 
