@@ -17,29 +17,29 @@ class Environment:
         self.agents = list()
         self.fruits = list()
 
-    def initialise_agents(self, number_of_agent, R=10):
-        for n in range(number_of_agent):
+    def generate_item(self, desired_number, assign_function, R=10):
+        for n in range(desired_number):
             x, y = random.randint(0, self.m - 1), random.randint(0, self.n - 1)
             r = 0
             while r < R and self.grid[y][x]:
                 x, y = random.randint(0, self.m - 1), random.randint(0, self.n - 1)
                 r += 1
+            assign_function(x, y)
+
+    def initialise_agents(self, number_of_agent, R=10):
+        def assign(x, y):
             self.agents.append(Agent(x, y, self))
             assert not self.grid[y][x]
             self.grid[y][x] = 'X'
+        self.generate_item(number_of_agent, assign)
 
     def initialise_fruits(self, number_of_fruit, p_A=0.5, R=10):
-        for n in range(number_of_fruit):
-            x, y = random.randint(0, self.m - 1), random.randint(0, self.n - 1)
-            r = 0
-            while r < R and self.grid[y][x]:
-                x, y = random.randint(0, self.m - 1), random.randint(0, self.n - 1)
-                r += 1
+        def assign(x, y):
             key_fruit = 'A' if random.random() < p_A else 'B'
             self.fruits.append(Fruit(x, y, key_fruit))
             assert not self.grid[y][x]
             self.grid[y][x] = key_fruit
-
+        self.generate_item(number_of_fruit, assign)
 
     def update(self):
         self.grid = [[0 for j in range(self.m)] for i in range(self.n)]

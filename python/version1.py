@@ -35,6 +35,9 @@ def main(stdscr):
             agent.act()
             env.update()
         env.display(2 * 30 + 8)
+
+    stdscr.addstr(0, 0, 'Press any key to quit\t')
+    stdscr.refresh()
     stdscr.getkey()
 
 
