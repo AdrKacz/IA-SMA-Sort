@@ -12,6 +12,7 @@ from agent import Agent
 
 def main(stdscr):
     # Clear screen
+    curses.curs_set(0) # invisible cursor
     curses.use_default_colors()
     stdscr.clear()
 
@@ -21,8 +22,8 @@ def main(stdscr):
     curses.init_pair(2, 2, -1) # B
     curses.init_pair(3, 3, -1) # Agent
     env = Environment(30, 30, stdscr)
-    env.initialise_fruits(200)
     env.initialise_agents(40)
+    env.initialise_fruits(200)
     env.update()
     env.display()
 

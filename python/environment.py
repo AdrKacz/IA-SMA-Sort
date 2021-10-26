@@ -24,22 +24,23 @@ class Environment:
             while r < R and self.grid[y][x]:
                 x, y = random.randint(0, self.m - 1), random.randint(0, self.n - 1)
                 r += 1
-            assign_function(x, y)
+            if not self.grid[y][x]:
+                assign_function(x, y)
 
     def initialise_agents(self, number_of_agent, R=10):
         def assign(x, y):
-            self.agents.append(Agent(x, y, self))
             assert not self.grid[y][x]
+            self.agents.append(Agent(x, y, self))
             self.grid[y][x] = 'X'
-        self.generate_item(number_of_agent, assign)
+        self.generate_item(number_of_agent, assign, R)
 
     def initialise_fruits(self, number_of_fruit, p_A=0.5, R=10):
         def assign(x, y):
+            assert not self.grid[y][x]
             key_fruit = 'A' if random.random() < p_A else 'B'
             self.fruits.append(Fruit(x, y, key_fruit))
-            assert not self.grid[y][x]
             self.grid[y][x] = key_fruit
-        self.generate_item(number_of_fruit, assign)
+        self.generate_item(number_of_fruit, assign, R)
 
     def update(self):
         self.grid = [[0 for j in range(self.m)] for i in range(self.n)]
@@ -50,7 +51,7 @@ class Environment:
 
     def update_agent(self, agent):
         assert not self.grid[agent.y][agent.x]
-        self.grid[agent.y][agent.x] = 'X'
+        self.grid[agent.y][agent.x] = agent
 
     def update_fruit(self, fruit):
         if not fruit.is_carried:
@@ -71,9 +72,9 @@ class Environment:
 
         stdscr.refresh()
 
-    def get_neighbors(self, x, y):
-        for dx in range(-1, 2):
-            for dy in range(-1, 2):
+    def get_neighbors(self, x, y, r=1):
+        for dx in range(-r, r + 1):
+            for dy in range(-r, r + 1):
                 if (dx or dy) and (0 <= x + dx < self.n and 0 <= y + dy < self.m):
                     yield x + dx, y + dy
 

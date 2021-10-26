@@ -1,6 +1,7 @@
 import random
 
 class Agent:
+    color = 1
     k_plus, k_minus = 0.1, 0.3
     memory_length = 100
     error_rate = 0.00
@@ -11,7 +12,7 @@ class Agent:
         self.memory = list()
         self.parent = parent
         self.fruit = None
-        self.color = 3
+        self.color = Agent.color
 
     def get_frequency(self, key):
         assert len(self.memory) <= Agent.memory_length
@@ -56,10 +57,11 @@ class Agent:
         if self.fruit:
             if self.will_release(): # Release fruit
                 self.fruit.x, self.fruit.y = old_x, old_y
-                self.color = 3 # Release
+                self.color = Agent.color # Release
                 self.fruit.is_carried = False
                 self.fruit = None
         else:
+            # Choose a fruit
             fruit = None
             for f in fruit_neighbors:
                 if self.will_carry(f.key):
@@ -67,7 +69,7 @@ class Agent:
                     break
 
             if fruit: # Carry this fruit (new_key)
-                self.x, self.y = fruit.x, fruit.y # Overwrite movement
+                self.x, self.y = fruit.x, fruit.y # Overwrite mouvement
                 self.color = fruit.color
                 fruit.is_carried = True
                 self.fruit = fruit
