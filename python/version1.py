@@ -31,7 +31,7 @@ def main(stdscr):
     for i in range(int(2e4)):
         stdscr.addstr(0, 0, f'Iteration {i}\t')
         stdscr.refresh()
-        random.shuffle(env.agents)
+        random.shuffle(env.agents) # Shuffle to avoid bias
         for agent in env.agents:
             agent.act()
             env.update()

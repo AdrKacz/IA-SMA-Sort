@@ -1,5 +1,5 @@
 """
-Version 1
+Version 2
 """
 
 import curses
@@ -148,7 +148,7 @@ class ComplexEnvironment(Environment):
         global stdscr
         stdscr = s
         Environment.__init__(self, n, m, s)
-        self.signal_grid = [[0 for j in range(m)] for i in range(n)]
+        self.signal_grid = [[0 for j in range(m)] for i in range(n)] # Between 0 and 1
 
     def decay_signals(self):
         for i in range(self.n):
@@ -156,20 +156,31 @@ class ComplexEnvironment(Environment):
                 self.signal_grid[i][j] = max(0, self.signal_grid[i][j] - ComplexEnvironment.decay_rate)
 
     def display(self, x_shift=0):
-        # TODO: Color in function of intensity
+        # TODO: Color in function of intensity, use color 227 to 233
         for i in range(self.n):
             for j in range(self.m):
-                if self.signal_grid[i][j] > 0:
-                    stdscr.addstr(i + 1, 2 * j + x_shift, ' ', color_pair(5))
+                if self.signal_grid[i][j] > 0: # 5 level, [0, 0.2, 0.4, 0.6, 0.8]
+                    pair_level = str(int(10 * self.signal_grid[i][j]) // 2)
+                    stdscr.addstr(i + 1, 2 * j + x_shift, ' ', color_pair(int(pair_level + '0')))
                 else:
                     stdscr.addstr(i + 1, 2 * j + x_shift, ' ')
 
         for agent in self.agents:
-            stdscr.addstr(agent.y + 1, 2 * agent.x + x_shift, 'X', color_pair(agent.color))
+            i, j = agent.y, agent.x
+            if self.signal_grid[i][j] > 0:
+                pair_level = str(int(10 * self.signal_grid[i][j]) // 2)
+                stdscr.addstr(i + 1, 2 * j + x_shift, 'X', color_pair(int(pair_level + str(agent.color))))
+            else:
+                stdscr.addstr(i + 1, 2 * j + x_shift, 'X', color_pair(agent.color))
 
         for fruit in self.fruits:
             if not fruit.is_carried:
-                stdscr.addstr(fruit.y + 1, 2 * fruit.x + x_shift, fruit.key, color_pair(fruit.color))
+                i, j = fruit.y, fruit.x
+                if self.signal_grid[i][j] > 0:
+                    pair_level = str(int(10 * self.signal_grid[i][j]) // 2)
+                    stdscr.addstr(i + 1, 2 * j + x_shift, fruit.key, color_pair(int(pair_level + str(fruit.color))))
+                else:
+                    stdscr.addstr(i + 1, 2 * j + x_shift, fruit.key, color_pair(fruit.color))
 
         stdscr.refresh()
 
@@ -197,14 +208,45 @@ def main(stdscr):
     curses.use_default_colors()
     stdscr.clear()
 
-    # Define Colors
+    # Define Colors with Signal Background (5 level, 0 - 0.2 - 0.4 - 0.8 - 1.0 -)
+    level_color = [231, 230, 229, 228, 227]
+    # Normal
     curses.init_pair(0, 0, -1) # Base
     curses.init_pair(1, 1, -1) # Agent
     curses.init_pair(2, 2, -1) # A
     curses.init_pair(3, 3, -1) # B
     curses.init_pair(4, 4, -1) # C
+    # Level 1
+    curses.init_pair(10, 0, level_color[0]) # Base
+    curses.init_pair(11, 1, level_color[0]) # Agent
+    curses.init_pair(12, 2, level_color[0]) # A
+    curses.init_pair(13, 3, level_color[0]) # B
+    curses.init_pair(14, 4, level_color[0]) # C
+    # Level 2
+    curses.init_pair(20, 0, level_color[1]) # Base
+    curses.init_pair(21, 1, level_color[1]) # Agent
+    curses.init_pair(22, 2, level_color[1]) # A
+    curses.init_pair(23, 3, level_color[1]) # B
+    curses.init_pair(24, 4, level_color[1]) # C
+    # Level 3
+    curses.init_pair(30, 0, level_color[2]) # Base
+    curses.init_pair(31, 1, level_color[2]) # Agent
+    curses.init_pair(32, 2, level_color[2]) # A
+    curses.init_pair(33, 3, level_color[2]) # B
+    curses.init_pair(34, 4, level_color[2]) # C
+    # Level 4
+    curses.init_pair(40, 0, level_color[3]) # Base
+    curses.init_pair(41, 1, level_color[3]) # Agent
+    curses.init_pair(42, 2, level_color[3]) # A
+    curses.init_pair(43, 3, level_color[3]) # B
+    curses.init_pair(44, 4, level_color[3]) # C
+    # Level 5
+    curses.init_pair(50, 0, level_color[4]) # Base
+    curses.init_pair(51, 1, level_color[4]) # Agent
+    curses.init_pair(52, 2, level_color[4]) # A
+    curses.init_pair(53, 3, level_color[4]) # B
+    curses.init_pair(54, 4, level_color[4]) # C
 
-    curses.init_pair(5, -1, 5) # Signal
     # Define size
     width, height = 30, 30
     env = ComplexEnvironment(height, width, stdscr)
@@ -215,6 +257,7 @@ def main(stdscr):
 
     ### Animation
     for i in range(int(2e4)):
+        # time.sleep(0.2)
         stdscr.addstr(0, 0, f'Iteration {i}\t')
         stdscr.refresh()
         env.decay_signals()

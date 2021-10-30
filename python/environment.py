@@ -22,6 +22,7 @@ class Environment:
             x, y = random.randint(0, self.m - 1), random.randint(0, self.n - 1)
             r = 0
             while r < R and self.grid[y][x]:
+                # Try at most R times
                 x, y = random.randint(0, self.m - 1), random.randint(0, self.n - 1)
                 r += 1
             if not self.grid[y][x]:
