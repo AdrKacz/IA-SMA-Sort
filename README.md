@@ -95,7 +95,75 @@ for i in range(int(2e4)):
 
 After each action, we update the state of the environment to keep its information up to date for the following agents.
 
-### Let's look them sort
+### How do agent act?
+
+The agent looks at the 8 cells around and record empty cells and cells with a fruit.
+
+```python
+empty_neighbors = list(self.parent.get_empty_neighbors(self.x, self.y))
+fruit_neighbors = list(self.parent.get_fruit_neighbors(self.x, self.y))
+```
+
+If there is a fruit around, it chooses one at random and update its memory with it.
+
+```python
+key_fruit = 0
+if len(fruit_neighbors) > 0:
+  key_fruit = random.choice(fruit_neighbors).key
+
+# Update memory
+while len(self.memory) >= Agent.memory_length:
+  self.memory.pop(0)
+self.memory.append(key_fruit)
+```
+
+If there is no empty cell around, it waits for the next round.
+
+```python
+if len(empty_neighbors) == 0:
+  return
+```
+
+If there is empty cell to move on, it chooses one at random.
+
+```python
+# Move
+old_x, old_y = self.x, self.y
+self.x, self.y = random.choice(empty_neighbors)
+```
+
+If it carries a fruit, it releases it with the probability `(frequency / (Agent.k_minus + frequency)) ** 2`. With `Agent.k_minus` a constant and `frequency` the frequency of occurrence of its current fruit in its memory.
+
+```python
+def will_release(self):
+  frequency = self.get_frequency(self.fruit.key)
+  return random.random() < (frequency / (Agent.k_minus + frequency)) ** 2
+```
+
+If it has no fruit, it chooses the first one that passes the statistical test **T**. **T** passes with a probability `(Agent.k_plus / (Agent.k_plus + frequency)) ** 2`, with `Agent.k_plus` a constant, and `frequency` as before.
+
+```python
+def will_carry(self, key):
+    frequency = self.get_frequency(key)
+    return random.random() < (Agent.k_plus / (Agent.k_plus + frequency)) ** 2
+```
+
+The agent measures `frequency` by counting the number of occurence of its fruit in its memory. It can miscount some fruits, with a probability `Agent.error_rate`.
+
+```python
+def get_frequency(self, key):
+  assert len(self.memory) <= Agent.memory_length
+  assert not key is None
+  if len(self.memory) == 0:
+    return 0
+  count, other = 0, 0
+  for value in self.memory:
+    if value == key:
+      count += 1
+    elif value != 0:
+      other += 1
+  return (count + other * Agent.error_rate) / len(self.memory)
+```
 
 ## Some heavy fruits
 
