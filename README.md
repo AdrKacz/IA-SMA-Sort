@@ -97,14 +97,14 @@ After each action, we update the state of the environment to keep its informatio
 
 ### How do agent act?
 
-The agent looks at the 8 cells around and record empty cells and cells with a fruit.
+The agent looks at the 8 cells around, and record empty cells, and cells with a fruit.
 
 ```python
 empty_neighbors = list(self.parent.get_empty_neighbors(self.x, self.y))
 fruit_neighbors = list(self.parent.get_fruit_neighbors(self.x, self.y))
 ```
 
-If there is a fruit around, it chooses one at random and update its memory with it.
+If there is a fruit around, it chooses one at random and it updates its memory with it.
 
 ```python
 key_fruit = 0
@@ -132,7 +132,9 @@ old_x, old_y = self.x, self.y
 self.x, self.y = random.choice(empty_neighbors)
 ```
 
-If it carries a fruit, it releases it with the probability `(frequency / (Agent.k_minus + frequency)) ** 2`. With `Agent.k_minus` a constant and `frequency` the frequency of occurrence of its current fruit in its memory.
+If it carries a fruit, it releases it with the probability `(frequency / (Agent.k_minus + frequency)) ** 2`.
+
+With `Agent.k_minus` a constant and `frequency` the frequency of occurrence of its current fruit in its memory.
 
 ```python
 def will_release(self):
@@ -140,7 +142,9 @@ def will_release(self):
   return random.random() < (frequency / (Agent.k_minus + frequency)) ** 2
 ```
 
-If it has no fruit, it chooses the first one that passes the statistical test **T**. **T** passes with a probability `(Agent.k_plus / (Agent.k_plus + frequency)) ** 2`, with `Agent.k_plus` a constant, and `frequency` as before.
+If it has no fruit, it chooses the first one that passes the statistical test **T**.
+
+**T** passes with a probability `(Agent.k_plus / (Agent.k_plus + frequency)) ** 2`, with `Agent.k_plus` a constant, and `frequency` as before.
 
 ```python
 def will_carry(self, key):
@@ -148,7 +152,9 @@ def will_carry(self, key):
     return random.random() < (Agent.k_plus / (Agent.k_plus + frequency)) ** 2
 ```
 
-The agent measures `frequency` by counting the number of occurence of its fruit in its memory. It can miscount some fruits, with a probability `Agent.error_rate`.
+The agent measures `frequency` by counting the number of occurence of its current fruit in its memory.
+
+It can miscount some fruits, with a probability `Agent.error_rate`.
 
 ```python
 def get_frequency(self, key):
@@ -167,11 +173,11 @@ def get_frequency(self, key):
 
 ### Action!
 
-Below is an animation of agents sorting the grid.
+Below is an animation (*GIF*) of agents sorting the grid.
 
 ![Agents sorting the grid](./previews/version1-preview-gif.gif)
 
-On the left, there is the unsorted grid, and on the right there is the grid after roughly **10,000** iterations. You can clearly see that the `A`'s and the `B`'s have been split.
+On the left, there is the unsorted grid, and on the right there is the grid after roughly **10,000** iterations. You can see that the `A`'s and the `B`'s have been split.
 
 ![Agents sorting the grid](./previews/version1-result.png)
 
