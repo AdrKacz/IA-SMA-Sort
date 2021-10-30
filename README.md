@@ -165,8 +165,16 @@ def get_frequency(self, key):
   return (count + other * Agent.error_rate) / len(self.memory)
 ```
 
+### Action!
+
+Here are the agent sorting the grid.
+
+![Agents sorting the grid](./previews/version1-preview-gif.gif)
+
+On the left, there is the unsorted grid, and on the right the grid after roughly **10,000** iteration. You can clearly see that the `A`'s and the `B`'s have been split.
+
+![Agents sorting the grid](./previews/version1-result.png)
+
 ## Some heavy fruits
 
 Some fruits are heavy and need two agents to move them. Each agent can diffuse around its position signal to call for help, but can't call specifically any other agent. Each agent can detect signals but cannot dissociate any signals from any agents (not even from their signals).
-
-### Let's look them sort
