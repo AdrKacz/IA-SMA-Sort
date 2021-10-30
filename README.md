@@ -167,11 +167,11 @@ def get_frequency(self, key):
 
 ### Action!
 
-Here are the agent sorting the grid.
+Below is an animation of agents sorting the grid.
 
 ![Agents sorting the grid](./previews/version1-preview-gif.gif)
 
-On the left, there is the unsorted grid, and on the right the grid after roughly **10,000** iteration. You can clearly see that the `A`'s and the `B`'s have been split.
+On the left, there is the unsorted grid, and on the right there is the grid after roughly **10,000** iterations. You can clearly see that the `A`'s and the `B`'s have been split.
 
 ![Agents sorting the grid](./previews/version1-result.png)
 
