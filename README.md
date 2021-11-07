@@ -2,6 +2,8 @@
 
 ## How to execute the code
 
+>Programs were tested on MacOS, and will work on Linux. If you do run on Windows ... well, at least please use a terminal that can display colour, otherwise `.\python\version1.py` and `.\python\version2.py` won't run.
+
 The project doesn't need any external dependencies.
 Be sure to have your terminal **full screen** and **color enabled** (use *PowerShell* on Windows)
 
