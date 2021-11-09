@@ -95,7 +95,7 @@ for i in range(int(2e4)):
   env.display(2 * 30 + 8)
 ```
 
-After each action, we update the state of the environment to keep its information up to date for the following agents.
+After each action, we update the state of the environment. It keeps its information up to date for the following agents.
 
 ### How do agents act?
 
@@ -154,7 +154,7 @@ def will_carry(self, key):
     return random.random() < (Agent.k_plus / (Agent.k_plus + frequency)) ** 2
 ```
 
-The agent measures `frequency` by counting the number of occurrences of its current fruit in its memory.
+The agent counts the number of occurrences of its current fruit in its memory to measure `frequency`.
 
 It can miscount some fruits, with a probability `Agent.error_rate`.
 
@@ -179,7 +179,7 @@ Below is an animation (*GIF*) of agents sorting the grid.
 
 ![Agents sorting the grid](./previews/version1-preview-gif.gif)
 
-On the left, there is the unsorted grid, and on the right there is the grid after roughly **10,000** iterations. You can see that the `A`'s and the `B`'s have been split.
+On the left, there is the unsorted grid. On the right, there is the grid after roughly **10,000** iterations. You can see that the `A`'s and the `B`'s have been split.
 
 ![Agents sorting the grid](./previews/version1-result.png)
 
