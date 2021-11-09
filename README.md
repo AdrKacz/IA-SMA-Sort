@@ -2,10 +2,10 @@
 
 ## How to execute the code
 
->Programs were tested on MacOS, and will work on Linux. If you do run on Windows ... well, at least please use a terminal that can display colour, otherwise `.\python\version1.py` and `.\python\version2.py` won't run.
+>Programs were tested on macOS and will work on Linux. If you run on Windows,  please use a terminal that can display colour, otherwise `./legacy/main.py` won't run.
 
 The project doesn't need any external dependencies.
-Be sure to have your terminal **full screen** and **color enabled** (use *PowerShell* on Windows)
+Be sure to have your terminal **full screen** and **colour enabled** (use *PowerShell* on Windows)
 
 ```
 git clone <link of the git repo>
@@ -18,25 +18,25 @@ You can stop the execution with `Ctrl-C` while it is running or press any key if
 
 The initial 2D-grid is on the left side and the current 2D-grid is on the right side.
 
-The agent are the `X`, the fruits are `A`, `B`
-, and `C`. Pheromones are represents with a yellowish background, the more intense it is the more pheromone there is.
+The agent is the `X`, the fruits are `A`, `B`
+, and `C`. Pheromones are represented with a yellowish background, the more intense it is the more pheromone there is.
 
-The code is pretty much self explanatory, don't hesitate to go through it to grasp what's under the hood.
+The code is pretty much self-explanatory, don't hesitate to go through it to grasp what's under the hood.
 
-*You can change the `width` and the `height` of the 2D-grid in either `version1.py` or `version2.py`. Try to keep the width small enough so that two grids can fit on your screens side-to-side (if not, that won't change the anything but it will be harder to see the animation).*
+*You can change the `width` and the `height` of the 2D grid in either `version1.py` or `version2.py`. Try to keep the width small enough so that two grids can fit on your screens side-to-side (if not, that won't change anything but it will be harder to see the animation).*
 
 ## From random grid to sorted grid
 
-We have a 2D-grid filled randomly fruits of different types.
-We want a group of agent to sort these fruits by type. Each agent is not aware of the global state of the 2D-grid.
+We have a 2D grid filled randomly with fruits of different types.
+We want a group of agents to sort these fruits by type. Each agent is not aware of the global state of the 2D grid.
 
 ### How to define the problem
 
-We define three `class` for this problem.
+We define three `classes` for this problem.
 
-- `Environment` that keeps the global state of display it on the terminal with the `curses` library.
-- `Agent` that acts based on its neighbourhood.
-- `Fruit` that can be carried by `Agent` and have a type that define their colour on the screen.
+- `Environment` keeps the global state of display it on the terminal with the `curses` library.
+- `Agent` acts based on its neighbourhood.
+- `Fruit` can be carried by `Agent` and have a type that defines their colour on the screen.
 
 To correctly display and refresh the information in the terminal, we use `curses.wrapper` to call our main loop. It returns a `stdscr` used by `Environment` to print at any position and to refresh the screen.
 
@@ -57,7 +57,7 @@ curses.init_pair(2, 2, -1) # B
 curses.init_pair(3, 3, -1) # Agent
 ```
 
-Then, we define the **environment** with its size and filled it with **agents** and **fruits**.
+Then, we define the **environment** with its size and fill it with **agents** and **fruits**.
 
 ```python
 env = Environment(30, 30, stdscr)
@@ -65,7 +65,7 @@ env.initialise_agents(40)
 env.initialise_fruits(200)
 ```
 
-To fill the **environment**, we provide the desire number of element. If there is no more space left, some element won't be created.
+To fill the **environment**, we provide the desired number of elements. If there is no more space left, some elements won't be created.
 
 ```python
 def generate_item(self, desired_number, assign_function, R=10):
@@ -80,9 +80,9 @@ def generate_item(self, desired_number, assign_function, R=10):
       assign_function(x, y)
 ```
 
-The number of iteration is fixed. There is no way for the agents to determine if the 2D-grid is sorted or not, and we decided to avoid to add logic to evaluate how well fruits are gather in cluster in the grid.
+The number of iteration is fixed. There is no way for the agents to determine if the 2D grid is sorted or not, and we decided to avoid adding logic to evaluate how well fruits are gathered in clusters in the grid.
 
-On each iteration, each agent act based on its surrounding environment. To avoid any bias, the order in which the agents act is changed for each iteration.
+On each iteration, each agent act based on its surrounding environment. To avoid any bias, the order in which agents act is changed for each iteration.
 
 ```python
 for i in range(int(2e4)):
@@ -97,7 +97,7 @@ for i in range(int(2e4)):
 
 After each action, we update the state of the environment to keep its information up to date for the following agents.
 
-### How do agent act?
+### How do agents act?
 
 The agent looks at the 8 cells around, and record empty cells, and cells with a fruit.
 
@@ -106,7 +106,7 @@ empty_neighbors = list(self.parent.get_empty_neighbors(self.x, self.y))
 fruit_neighbors = list(self.parent.get_fruit_neighbors(self.x, self.y))
 ```
 
-If there is a fruit around, it chooses one at random and it updates its memory with it.
+If there is a fruit around, it chooses one at random and updates its memory with it.
 
 ```python
 key_fruit = 0
@@ -126,7 +126,7 @@ if len(empty_neighbors) == 0:
   return
 ```
 
-If there is empty cell to move on, it chooses one at random.
+If there is an empty cell to move on, it chooses one at random.
 
 ```python
 # Move
@@ -154,7 +154,7 @@ def will_carry(self, key):
     return random.random() < (Agent.k_plus / (Agent.k_plus + frequency)) ** 2
 ```
 
-The agent measures `frequency` by counting the number of occurence of its current fruit in its memory.
+The agent measures `frequency` by counting the number of occurrences of its current fruit in its memory.
 
 It can miscount some fruits, with a probability `Agent.error_rate`.
 
