@@ -156,29 +156,37 @@ class ComplexEnvironment(Environment):
                 self.signal_grid[i][j] = max(0, self.signal_grid[i][j] - ComplexEnvironment.decay_rate)
 
     def display(self, x_shift=0):
-        # TODO: Color in function of intensity, use color 227 to 233
+        # Empty cell
         for i in range(self.n):
             for j in range(self.m):
+                # With pheromones
                 if self.signal_grid[i][j] > 0: # 5 level, [0, 0.2, 0.4, 0.6, 0.8]
                     pair_level = str(int(10 * self.signal_grid[i][j]) // 2)
                     stdscr.addstr(i + 1, 2 * j + x_shift, ' ', color_pair(int(pair_level + '0')))
+                # Without pheromones
                 else:
                     stdscr.addstr(i + 1, 2 * j + x_shift, ' ')
 
+        # Cells with agents
         for agent in self.agents:
             i, j = agent.y, agent.x
+            # On top of pheromones
             if self.signal_grid[i][j] > 0:
                 pair_level = str(int(10 * self.signal_grid[i][j]) // 2)
                 stdscr.addstr(i + 1, 2 * j + x_shift, 'X', color_pair(int(pair_level + str(agent.color))))
+            # On top of nothing
             else:
                 stdscr.addstr(i + 1, 2 * j + x_shift, 'X', color_pair(agent.color))
 
+        # Cells with fruits
         for fruit in self.fruits:
             if not fruit.is_carried:
                 i, j = fruit.y, fruit.x
+                # On top of pheromones
                 if self.signal_grid[i][j] > 0:
                     pair_level = str(int(10 * self.signal_grid[i][j]) // 2)
                     stdscr.addstr(i + 1, 2 * j + x_shift, fruit.key, color_pair(int(pair_level + str(fruit.color))))
+                # On top of nothing
                 else:
                     stdscr.addstr(i + 1, 2 * j + x_shift, fruit.key, color_pair(fruit.color))
 
